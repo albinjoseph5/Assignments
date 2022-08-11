@@ -51,7 +51,7 @@ public class AssignmentsAugust07 {
 		WebElement lastNameInputField = driver.findElement(By.cssSelector("#input-lastname"));
 		lastNameInputField.sendKeys("Name");
 
-		String randomEmailID = "user" + randomNumber.nextInt(50) + "@gmail.com";
+		String randomEmailID = "user" + randomNumber.nextInt(5000) + "@gmail.com";
 		WebElement emailInputField = driver.findElement(By.cssSelector("#input-email"));
 		emailInputField.sendKeys(randomEmailID);
 
