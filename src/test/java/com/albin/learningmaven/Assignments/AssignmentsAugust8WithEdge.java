@@ -7,27 +7,24 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class AssignmentsAugust07 {
+public class AssignmentsAugust8WithEdge {
 
 	WebDriver driver;
-	WebDriverWait wait;
 
 	@BeforeMethod
 	public void setup() {
 		// Basic setup to begin with
-		System.setProperty("webdriver.chrome.driver", "C:\\Driver\\Chrome Driver\\chromedriver.exe");
+		System.setProperty("webdriver.edge.driver", "C:\\Driver\\Edge\\msedgedriver.exe");
 
 		// Opens up the browser
-		driver = new ChromeDriver();
-		wait = new WebDriverWait(driver, 20);
+		driver = new EdgeDriver();
 
 		// Load URL on the browser
 		driver.get("https://naveenautomationlabs.com/opencart/index.php?route=common/home");
@@ -35,14 +32,13 @@ public class AssignmentsAugust07 {
 		// Maximize the screen
 		driver.manage().window().maximize();
 
-//		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		driver.manage().timeouts().setScriptTimeout(100, TimeUnit.SECONDS);
 		driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
 	}
 
 	@Test
 	public void purchaseTest() {
-
 		Random randomNumber = new Random();
 		WebElement myAccountBtn = driver.findElement(By.cssSelector("#top-links ul.list-inline>li:nth-of-type(2)>a"));
 		myAccountBtn.click();
@@ -117,8 +113,7 @@ public class AssignmentsAugust07 {
 		WebElement checkOutBtn = driver.findElement(By.cssSelector("#top-links > ul > li:nth-of-type(5) > a"));
 		checkOutBtn.click();
 
-		WebElement billingFirstNameInputField = wait
-				.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-payment-firstname")));
+		WebElement billingFirstNameInputField = driver.findElement(By.id("input-payment-firstname"));
 		billingFirstNameInputField.sendKeys("User");
 
 		WebElement billingLastNameInputField = driver.findElement(By.id("input-payment-lastname"));
@@ -137,21 +132,15 @@ public class AssignmentsAugust07 {
 		select(driver.findElement(By.id("input-payment-zone")), "Ontario");
 
 		driver.findElement(By.id("button-payment-address")).click();
-		wait.until(ExpectedConditions.elementToBeClickable(By.id("button-shipping-address")));
 		driver.findElement(By.cssSelector("#button-shipping-address")).click();
-//		driver.findElement(By.id("button-shipping-method")).click();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("button-shipping-method"))).click();
+		driver.findElement(By.id("button-shipping-method")).click();
 
-		wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("input[type='checkbox']")));
 		driver.findElement(By.cssSelector("input[type='checkbox']")).click();
 		driver.findElement(By.id("button-payment-method")).click();
-
-		wait.until(ExpectedConditions.elementToBeClickable(By.id("button-confirm"))).click();
-
-		wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("#content h1"),
-				"Your order has been placed!"));
-		String successMessage = driver.findElement(By.cssSelector("#content h1")).getText();
-		Assert.assertEquals(successMessage, "Your order has been placed!", "Text doesnot match");
+		driver.findElement(By.id("button-confirm")).click();
+		sleep();
+		Assert.assertEquals(driver.findElement(By.cssSelector("#content h1")).getText(), "Your order has been placed!",
+				"Text doesnot match");
 
 		WebElement myAccountBtn3 = driver.findElement(By.cssSelector("#top-links ul.list-inline>li:nth-of-type(2)>a"));
 		myAccountBtn3.click();
@@ -159,7 +148,7 @@ public class AssignmentsAugust07 {
 		WebElement logoutBtn1 = driver
 				.findElement(By.cssSelector("#top-links > ul > li.dropdown.open > ul > li:nth-of-type(5) > a"));
 		logoutBtn1.click();
-
+//		sleep();
 		Assert.assertEquals(driver.findElement(By.cssSelector("#content h1")).getText(), "Account Logout",
 				"Text doesnot match");
 	}
@@ -167,7 +156,7 @@ public class AssignmentsAugust07 {
 	@AfterMethod
 	public void teardown() {
 		// Close the browser
-		driver.quit();
+		driver.close();
 	}
 
 	public void sleep() {
@@ -181,9 +170,7 @@ public class AssignmentsAugust07 {
 
 	public void select(WebElement element, String selectedElement) {
 		Select sc = new Select(element);
-		wait.until(ExpectedConditions.textToBePresentInElement(element, selectedElement));
 		sc.selectByVisibleText(selectedElement);
-
 	}
 
 }
